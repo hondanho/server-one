@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - ./db:/var/lib/mysql
+     restart: unless-stopped
+     container_name: mysql
+    #  ports:
+    #    - "3306:3306" 
+     environment:
+       MYSQL_ROOT_PASSWORD: P7Msjz7hGPECYx1
+       MYSQL_DATABASE: wpdefault
+       MYSQL_USER: wordpress
+       MYSQL_PASSWORD: P7Msjz7hGPECYx1
+
+  #  phpmyadmin:
+  #    image: phpmyadmin/phpmyadmin
+  #    container_name: phpmyadmin
+  #    ports:
+  #      - "8001:80"
+  #    environment:
+  #      PMA_HOST: db
+  #      PMA_ARBITRARY: 1
+  #      MYSQL_ROOT_PASSWORD: P7Msjz7hGPECYx1
+
+   wp:
+     depends_on:
+       - db
+     image: wordpress:5.6.0-php7.4-apache
+     container_name: wp-spykit
+     ports:
+       - "8003:80"
+     restart: unless-stopped
+     volumes:
+       - ./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+       - ./wordpress:/var/www/html
+     environment:
+       WORDPRESS_DB_HOST: db:3306
+       WORDPRESS_DB_USER: wordpress
+       WORDPRESS_DB_PASSWORD: P7Msjz7hGPECYx1
+       WORDPRESS_DB_NAME: wpdefault
